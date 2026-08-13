@@ -1,0 +1,18 @@
+{
+  "image": "ghcr.io/nrfconnect/sdk-nrf-toolchain:v3.3.0",
+  "runArgs": ["--privileged"],
+  "mounts": [
+    "source=/dev/bus/usb,target=/dev/bus/usb,type=bind",
+    "source=ncs-sdk-cache-${devcontainerId},target=/workspaces,type=volume"
+  ],
+  "onCreateCommand": "nrfutil toolchain-manager launch -- bash -c 'west topdir >/dev/null 2>&1 || west init -l .' && (grep -qF toolchain-env.sh ~/.bashrc || echo source /opt/toolchain-env.sh >> ~/.bashrc)",
+  "postCreateCommand": "nrfutil toolchain-manager launch -- bash -c 'west update --narrow -o=--depth=1 && west zephyr-export'",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "nordic-semiconductor.nrf-connect-extension-pack"
+      ]
+    }
+  }
+}
